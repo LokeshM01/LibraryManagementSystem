@@ -1,0 +1,4 @@
+0|ABC123|John Doe|john@example.com|pass123|0.0;0;;0;
+0|DEF456|Jane Smith|jane@example.com|pass123|0.0;0;;0;
+1|GHI789|Dr. Wilson|wilson@example.com|pass123|0.0;0;;0;
+2|JKL012|Admin|admin@library.com|admin123|0.0;0;;0;

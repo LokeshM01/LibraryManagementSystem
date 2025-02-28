@@ -1,0 +1,2 @@
+# Format: UserID|BookID|BorrowDate|ReturnDate|Fine
+# This file will be automatically populated as users borrow and return books

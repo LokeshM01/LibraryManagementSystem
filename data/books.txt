@@ -1,0 +1,5 @@
+A1B2C3D4|The Great Gatsby|F. Scott Fitzgerald|Scribner|1925|978-0743273565|0
+E5F6G7H8|To Kill a Mockingbird|Harper Lee|Grand Central|1960|978-0446310789|0
+I9J0K1L2|1984|George Orwell|Penguin|1949|978-0451524935|0
+M3N4O5P6|Pride and Prejudice|Jane Austen|Penguin|1813|978-0141439518|0
+Q7R8S9T0|The Catcher in the Rye|J.D. Salinger|Little, Brown|1951|978-0316769488|0

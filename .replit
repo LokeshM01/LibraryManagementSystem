@@ -1,0 +1,33 @@
+modules = ["cpp"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "C++ Library System"
+
+[[workflows.workflow]]
+name = "C++ Library System"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "g++ src/*.cpp -o main && ./main"
+
+[deployment]
+run = ["sh", "-c", "g++ src/*.cpp -o main && ./main"]
