@@ -13,6 +13,7 @@ User::User(const std::string& name, const std::string& email,
 std::string User::getId() const { return id; }
 std::string User::getName() const { return name; }
 std::string User::getEmail() const { return email; }
+std::string User::getPassword() const { return password; } // Added getter
 UserRole User::getRole() const { return role; }
 Account& User::getAccount() { return account; }
 
@@ -26,17 +27,17 @@ std::string User::serialize() const {
 User* User::deserialize(const std::string& data) {
     std::stringstream ss(data);
     std::string roleStr, id, name, email, password, accountData;
-    
+
     std::getline(ss, roleStr, '|');
     std::getline(ss, id, '|');
     std::getline(ss, name, '|');
     std::getline(ss, email, '|');
     std::getline(ss, password, '|');
     std::getline(ss, accountData);
-    
+
     UserRole role = static_cast<UserRole>(std::stoi(roleStr));
     User* user = nullptr;
-    
+
     switch(role) {
         case UserRole::STUDENT:
             user = new Student(name, email, password);
@@ -48,12 +49,12 @@ User* User::deserialize(const std::string& data) {
             user = new Librarian(name, email, password);
             break;
     }
-    
+
     if (user) {
         user->id = id;
         user->account = Account::deserialize(accountData);
     }
-    
+
     return user;
 }
 

@@ -3,6 +3,14 @@
 #include <limits>
 #include "library.hpp"
 
+// Enhanced ANSI color codes for gradient effects
+const std::string ORANGE = "\033[38;2;255;165;0m";
+const std::string PINK = "\033[38;2;255;192;203m";
+const std::string PURPLE = "\033[38;2;147;112;219m";
+const std::string RESET = "\033[0m";
+const std::string BOLD = "\033[1m";
+const std::string DIM = "\033[2m";
+
 void clearScreen() {
     #ifdef _WIN32
         system("cls");
@@ -11,65 +19,93 @@ void clearScreen() {
     #endif
 }
 
+std::string createButton(const std::string& text, const std::string& color) {
+    std::string padding(16 - text.length(), ' ');
+    std::string shadow = DIM + "  ╚════════════╝" + RESET;
+    return color + BOLD +
+           "  ╔════════════╗\n" +
+           "  ║ " + text + padding.substr(0, padding.length() - 2) + "║\n" +
+           "  ╚════════════╝" + RESET + "\n" +
+           shadow + "\n";
+}
+
+std::string createHeader(const std::string& text) {
+    std::string line(40, '═');
+    return PURPLE + BOLD +
+           "╔" + line + "╗\n" +
+           "║" + std::string(15, ' ') + text + std::string(15, ' ') + "║\n" +
+           "╚" + line + "╝\n" + RESET;
+}
+
 void displayMainMenu() {
-    std::cout << "\n=== Library Management System ===\n"
-              << "1. Login\n"
-              << "2. Exit\n"
-              << "Choice: ";
+    clearScreen();
+    std::cout << "\n" << createHeader("Library Management System") << "\n";
+
+    std::cout << ORANGE << createButton("1. Login", ORANGE)
+              << PINK << createButton("2. Exit", PINK)
+              << PURPLE << "Choice: " << RESET;
 }
 
 void displayUserMenu(UserRole role) {
     clearScreen();
-    std::cout << "\n=== User Menu ===\n";
-    
+    std::cout << "\n" << createHeader("User Menu") << "\n";
+
     switch(role) {
         case UserRole::STUDENT:
         case UserRole::FACULTY:
-            std::cout << "1. View Available Books\n"
-                     << "2. Search Books\n"
-                     << "3. Borrow Book\n"
-                     << "4. Return Book\n"
-                     << "5. View My Books\n"
-                     << "6. View My Fines\n"
-                     << "7. Pay Fine\n"
-                     << "8. Logout\n";
+            std::cout << ORANGE << createButton("1. View Books", ORANGE)
+                     << PINK << createButton("2. Search Books", PINK)
+                     << PURPLE << createButton("3. Borrow Book", PURPLE)
+                     << ORANGE << createButton("4. Return Book", ORANGE)
+                     << PINK << createButton("5. My Books", PINK)
+                     << PURPLE << createButton("6. View Fines", PURPLE)
+                     << ORANGE << createButton("7. Pay Fine", ORANGE)
+                     << PINK << createButton("8. Logout", PINK);
             break;
-            
+
         case UserRole::LIBRARIAN:
-            std::cout << "1. Add Book\n"
-                     << "2. Remove Book\n"
-                     << "3. Add User\n"
-                     << "4. Remove User\n"
-                     << "5. View All Books\n"
-                     << "6. View All Users\n"
-                     << "7. View All Fines\n"
-                     << "8. Logout\n";
+            std::cout << ORANGE << createButton("1. Add Book", ORANGE)
+                     << PINK << createButton("2. Remove Book", PINK)
+                     << PURPLE << createButton("3. Add User", PURPLE)
+                     << ORANGE << createButton("4. Remove User", ORANGE)
+                     << PINK << createButton("5. View Books", PINK)
+                     << PURPLE << createButton("6. View Users", PURPLE)
+                     << ORANGE << createButton("7. View Fines", ORANGE)
+                     << PINK << createButton("8. Logout", PINK);
             break;
     }
-    std::cout << "Choice: ";
+    std::cout << PURPLE << "\nChoice: " << RESET;
 }
 
 void displayBooks(const std::vector<Book*>& books) {
-    std::cout << "\n=== Books ===\n";
-    std::cout << std::setw(10) << "ID" 
+    std::cout << "\n" << createHeader("Books Catalog") << "\n";
+    std::cout << BOLD << PURPLE
+              << std::setw(10) << "ID" 
               << std::setw(30) << "Title"
               << std::setw(20) << "Author"
-              << std::setw(15) << "Status\n";
-    std::cout << std::string(75, '-') << "\n";
-    
+              << std::setw(15) << "Status" << RESET << "\n";
+    std::cout << DIM << std::string(75, '─') << RESET << "\n";
+
     for (const auto& book : books) {
         std::string status;
         switch(book->getStatus()) {
-            case BookStatus::AVAILABLE: status = "Available"; break;
-            case BookStatus::BORROWED: status = "Borrowed"; break;
-            case BookStatus::RESERVED: status = "Reserved"; break;
+            case BookStatus::AVAILABLE: 
+                status = ORANGE + "Available" + RESET; 
+                break;
+            case BookStatus::BORROWED: 
+                status = PINK + "Borrowed" + RESET; 
+                break;
+            case BookStatus::RESERVED: 
+                status = PURPLE + "Reserved" + RESET; 
+                break;
         }
-        
+
         std::cout << std::setw(10) << book->getId()
                   << std::setw(30) << book->getTitle()
                   << std::setw(20) << book->getAuthor()
                   << std::setw(15) << status << "\n";
     }
+    std::cout << DIM << std::string(75, '─') << RESET << "\n";
 }
 
 User* login(Library& library) {
@@ -269,8 +305,8 @@ void handleLibrarianMenu(Library& library, User* user) {
                     std::cout << "\n=== Users ===\n";
                     for (const auto& u : library.getAllUsers()) {
                         std::cout << "ID: " << u->getId() 
-                                << ", Name: " << u->getName()
-                                << ", Role: " << static_cast<int>(u->getRole()) << "\n";
+                                 << ", Name: " << u->getName()
+                                 << ", Role: " << static_cast<int>(u->getRole()) << "\n";
                     }
                 }
                 break;
@@ -281,7 +317,7 @@ void handleLibrarianMenu(Library& library, User* user) {
                     for (const auto& u : library.getAllUsers()) {
                         if (u->getAccount().hasFine()) {
                             std::cout << "User: " << u->getName() 
-                                    << ", Fine: ₹" << u->getAccount().getFine() << "\n";
+                                     << ", Fine: ₹" << u->getAccount().getFine() << "\n";
                         }
                     }
                 }
